@@ -1,11 +1,21 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const PDFViewer = dynamic(() => import('./PDFViewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-screen">
+      <p>Cargando PDF...</p>
+    </div>
+  ),
+});
+
 export default function Home() {
   return (
-    <div className="w-full h-screen overflow-hidden">
-      <iframe
-        src="/back.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH"
-        className="w-full h-full border-0"
-        title="PDF Viewer"
-      />
+    <div className="w-full h-screen overflow-auto flex items-start justify-center bg-gray-100">
+      <PDFViewer />
     </div>
   );
 }
