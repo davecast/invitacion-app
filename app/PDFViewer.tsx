@@ -10,17 +10,23 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function PDFViewer() {
-  const [width, setWidth] = useState<number>(0);
+  const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ 
+    width: 0, 
+    height: 0 
+  });
 
   useEffect(() => {
-    const updateWidth = () => {
-      setWidth(window.innerWidth);
+    const updateDimensions = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     };
     
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
     
-    return () => window.removeEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
   return (
@@ -34,7 +40,7 @@ export default function PDFViewer() {
     >
       <Page 
         pageNumber={1} 
-        width={width || undefined}
+        height={dimensions.height || undefined}
         renderTextLayer={false}
         renderAnnotationLayer={true}
       />
