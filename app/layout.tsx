@@ -13,9 +13,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Invitación",
-  description: "Invitación especial",
+  title: "Baby Shower de Somebaby 👶",
+  description: "Haz clic para ver los detalles y confirmar tu asistencia.",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  openGraph: {
+    title: "¡Estás invitado al Baby Shower!",
+    description: "Haz clic para ver los detalles y confirmar tu asistencia.",
+    images: [
+      {
+        url: "/preview-del-pdf.jpg",
+        width: 1200,
+        height: 1200,
+        alt: "Baby Shower de Somebaby",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "¡Estás invitado al Baby Shower!",
+    description: "Haz clic para ver los detalles y confirmar tu asistencia.",
+    images: ["/preview-del-pdf.jpg"],
+  },
 };
 
 export default function RootLayout({
