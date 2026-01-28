@@ -15,7 +15,8 @@ export default function PDFViewer() {
   useEffect(() => {
     const updateDimensions = () => {
       const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
+      // Usar visualViewport si está disponible, sino window.innerHeight
+      const screenHeight = window.visualViewport?.height || window.innerHeight;
       
       // Proporción del PDF: 1080x1920 = 0.5625 (ancho/alto)
       const pdfRatio = 1080 / 1920;
@@ -32,17 +33,19 @@ export default function PDFViewer() {
     
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
+    window.visualViewport?.addEventListener('resize', updateDimensions);
     
-    return () => window.removeEventListener('resize', updateDimensions);
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+      window.visualViewport?.removeEventListener('resize', updateDimensions);
+    };
   }, []);
 
   return (
     <Document
       file="/back.pdf"
       loading={
-        <div className="flex items-center justify-center h-screen">
-          <p>Cargando PDF...</p>
-        </div>
+        <div className="flex items-center justify-center h-screen"></div>
       }
     >
       <Page 
