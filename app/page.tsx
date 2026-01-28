@@ -14,7 +14,7 @@ const PDFViewer = dynamic(() => import('./PDFViewer'), {
 
 export default function Home() {
   return (
-    <div className="w-full h-screen overflow-hidden flex items-center justify-center bg-gray-100">
+    <div className="w-full h-screen overflow-hidden flex justify-center bg-gray-100">
       <PDFViewer />
     </div>
   );
