@@ -10,23 +10,26 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function PDFViewer() {
-  const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ 
-    width: 0, 
-    height: 0 
-  });
+  const [scale, setScale] = useState<number>(1);
 
   useEffect(() => {
-    const updateDimensions = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
+    const updateScale = () => {
+      const pdfAspectRatio = 1080 / 1920; // ancho / alto del PDF
+      const screenAspectRatio = window.innerWidth / window.innerHeight;
+      
+      if (screenAspectRatio > pdfAspectRatio) {
+        // La pantalla es más ancha que el PDF, usar height
+        setScale(window.innerHeight / 1920);
+      } else {
+        // La pantalla es más angosta que el PDF, usar width
+        setScale(window.innerWidth / 1080);
+      }
     };
     
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
+    updateScale();
+    window.addEventListener('resize', updateScale);
     
-    return () => window.removeEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateScale);
   }, []);
 
   return (
@@ -40,7 +43,7 @@ export default function PDFViewer() {
     >
       <Page 
         pageNumber={1} 
-        height={dimensions.height || undefined}
+        scale={scale}
         renderTextLayer={false}
         renderAnnotationLayer={true}
       />
