@@ -10,26 +10,30 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function PDFViewer() {
-  const [scale, setScale] = useState<number>(1);
+  const [dimensions, setDimensions] = useState<{ width?: number; height?: number }>({});
 
   useEffect(() => {
-    const updateScale = () => {
-      const pdfAspectRatio = 1080 / 1920; // ancho / alto del PDF
-      const screenAspectRatio = window.innerWidth / window.innerHeight;
+    const updateDimensions = () => {
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
       
-      if (screenAspectRatio > pdfAspectRatio) {
-        // La pantalla es más ancha que el PDF, usar height
-        setScale(window.innerHeight / 1920);
+      // Proporción del PDF: 1080x1920 = 0.5625 (ancho/alto)
+      const pdfRatio = 1080 / 1920;
+      const screenRatio = screenWidth / screenHeight;
+      
+      if (screenRatio > pdfRatio) {
+        // Pantalla más ancha proporcionalmente, limitar por altura
+        setDimensions({ height: screenHeight });
       } else {
-        // La pantalla es más angosta que el PDF, usar width
-        setScale(window.innerWidth / 1080);
+        // Pantalla más angosta proporcionalmente, limitar por ancho
+        setDimensions({ width: screenWidth });
       }
     };
     
-    updateScale();
-    window.addEventListener('resize', updateScale);
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
     
-    return () => window.removeEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
   return (
@@ -43,7 +47,8 @@ export default function PDFViewer() {
     >
       <Page 
         pageNumber={1} 
-        scale={scale}
+        width={dimensions.width}
+        height={dimensions.height}
         renderTextLayer={false}
         renderAnnotationLayer={true}
       />
